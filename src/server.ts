@@ -1,16 +1,22 @@
-import express from 'express';
+import express, { Request } from 'express';
 
 import { getChatCompletion } from './utils/chat-gpt';
 
 const app = express();
 
-app.get('/', async (req, res) => {
-  const response = await getChatCompletion(
-    'Me dá uma maneira de cumprimento social.'
-  );
+app.get(
+  '/',
+  async (
+    req: Request<{}, any, any, { content: string }, Record<string, any>>,
+    res
+  ) => {
+    const { content } = req.query;
 
-  return res.status(200).json({ response });
-});
+    const response = await getChatCompletion(content);
+
+    return res.status(200).json({ response });
+  }
+);
 
 app.get('/:text', async (req, res) => {
   const { text } = req.params;
