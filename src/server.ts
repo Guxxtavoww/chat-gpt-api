@@ -1,29 +1,23 @@
-import { config } from 'dotenv';
-import readline from 'readline';
-import { Configuration, OpenAIApi } from 'openai';
+import express from 'express';
 
-config();
+import { getChatCompletion } from './utils/chat-gpt';
 
-const openAi = new OpenAIApi(
-  new Configuration({
-    apiKey: process.env.OPEN_AI_API_KEY,
-  })
-);
+const app = express();
 
-const userInterface = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
+app.get('/', async (req, res) => {
+  const response = await getChatCompletion(
+    'Me dá uma maneira de cumprimento social.'
+  );
+
+  return res.status(200).json({ response });
 });
 
-userInterface.prompt();
+app.get('/:text', async (req, res) => {
+  const { text } = req.params;
 
-userInterface.on('line', async (input) => {
-  const response = await openAi.createChatCompletion({
-    model: 'gpt-3.5-turbo',
-    messages: [{ role: 'user', content: input }],
-  });
+  const response = await getChatCompletion(text);
 
-  console.log({ apiResponse: response.data.choices[0].message?.content });
-
-  userInterface.prompt();
+  res.status(200).json({ apiResponse: response });
 });
+
+app.listen(3000, () => console.log('Rodando'));
