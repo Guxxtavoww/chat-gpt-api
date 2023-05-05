@@ -12,9 +12,13 @@ app.get(
   ) => {
     const { content } = req.query;
 
-    const response = await getChatCompletion(content);
+    try {
+      const response = await getChatCompletion(content);
 
-    return res.status(200).json({ response });
+      return res.status(200).json({ response });
+    } catch (err) {
+      return res.status(500).json({ erro: 'Erro' });
+    }
   }
 );
 
