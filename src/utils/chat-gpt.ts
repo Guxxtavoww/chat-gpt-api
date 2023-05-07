@@ -12,10 +12,14 @@ export async function getChatCompletion(
     })
   );
 
-  const chatResponse = await openAi.createChatCompletion({
-    model: 'gpt-3.5-turbo',
-    messages: [{ role: 'user', content }],
-  });
+  const chatResponse = await openAi
+    .createChatCompletion({
+      model: 'gpt-3.5-turbo',
+      messages: [{ role: 'user', content }],
+    })
+    .catch((err) => {
+      throw err;
+    });
 
   return chatResponse.data.choices[0].message?.content;
 }

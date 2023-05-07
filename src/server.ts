@@ -4,23 +4,25 @@ import { getChatCompletion } from './utils/chat-gpt';
 
 const app = express();
 
-app.get(
-  '/',
-  async (
-    req: Request<{}, any, any, { content: string }, Record<string, any>>,
-    res
-  ) => {
-    const { content } = req.query;
+type MainRouteReq = Request<
+  {},
+  any,
+  any,
+  { content: string },
+  Record<string, any>
+>;
 
-    try {
-      const response = await getChatCompletion(content);
+app.get('/', async (req: MainRouteReq, res) => {
+  const { content } = req.query;
 
-      return res.status(200).json({ response });
-    } catch (err) {
-      return res.status(500).json({ erro: 'Erro' });
-    }
+  try {
+    const response = await getChatCompletion(content);
+
+    return res.status(200).json({ response });
+  } catch (err) {
+    return res.status(500).json(err);
   }
-);
+});
 
 app.get('/:text', async (req, res) => {
   const { text } = req.params;
