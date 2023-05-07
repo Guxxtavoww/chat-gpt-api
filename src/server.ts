@@ -1,6 +1,6 @@
 import express, { Request } from 'express';
 
-import { getChatCompletion } from './utils/chat-gpt';
+import { getChatCompletion } from './lib/chat-gpt';
 
 const app = express();
 
